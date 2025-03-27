@@ -37,7 +37,7 @@ and real-time synchronization capabilities.
 ### Installation
 1. **Clone Repository**
    ```bash
-   git clone https://github.com/yourusername/task-manager-android.git
+   git clone https://github.com/shambuchandran/Taskmanager/tree/master
 
 ## Third-Party Libraries
 Library	Version	Purpose
