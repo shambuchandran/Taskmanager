@@ -3,7 +3,7 @@
 A modern Android task management application with local persistence, Firebase integration, 
 and real-time synchronization capabilities.
 
-![App Screenshot](screenshots/main_screen.png) <!-- Add actual screenshot path -->
+![App Screenshot](appscreen1.png)
 
 ## Features
 
