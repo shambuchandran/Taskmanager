@@ -41,12 +41,13 @@ and real-time synchronization capabilities.
 
 ## Third-Party Libraries
 Library	Version	Purpose
-- Room	2.6.1	Local database persistence
-- Firebase	32.7.0	Analytics, Crash Reporting, Performance Monitoring
-- Hilt	2.48	Dependency Injection
+- Room	2.5.0	Local database persistence
+- ksp  2.0.21-1.0.27
+- Firebase	33.11.0	Analytics, Crash Reporting, Performance Monitoring
+- Hilt	2.56.1	Dependency Injection
 - Kotlin Coroutines	1.7.3	Asynchronous operations
-- Jetpack Compose	1.5.4	Modern UI implementation
-- Material3	1.1.2	Theming and UI components
+- Jetpack Compose	1.10.1	Modern UI implementation
+- Material3	Theming and UI components
 
 ##Architecture & Design Decisions
 1. Layered Architecture
