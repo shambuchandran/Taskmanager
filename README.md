@@ -87,21 +87,13 @@ Asynchronous operations with Coroutines
 
 8. Modern UI Patterns
 Jetpack Compose for declarative UI
-
 Material3 theming system
-
 State hoisting for testable components
-
 Testing Features
-
 Simulated Network Calls
-
 Mock API service with configurable delay:
-
 delay(Random.nextLong(500, 1500)) // Simulate network latency // for UI testing 
-
 Debug Tools
-
 Forced crash testing
 fun triggerTestCrash() {
     throw RuntimeException("Test crash")
@@ -125,13 +117,9 @@ Performance Metrics
 Trace Name: fetch_tasks
 
 Metrics:
-
 tasks_received (count)
-
 duration (ms)
 
 Attributes:
-
 status (success/failed)
-
 error_type (if failed)
