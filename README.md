@@ -3,7 +3,7 @@
 A modern Android task management application with local persistence, Firebase integration, 
 and real-time synchronization capabilities.
 
-![App Screenshot](main/appscreen1.jpg)
+![App Screenshot]([main/appscreen1.jpg](https://github.com/shambuchandran/Taskmanager/blob/main/appscreen1.jpg))
 
 ## Features
 
