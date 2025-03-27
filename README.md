@@ -4,6 +4,11 @@ A modern Android task management application with local persistence, Firebase in
 and real-time synchronization capabilities.
 
 ![App Screenshot](https://github.com/shambuchandran/Taskmanager/blob/main/appscreen1.jpg)
+![App Screenshot](https://github.com/shambuchandran/Taskmanager/blob/main/appscreen2.jpg)
+![Crash Screenshot](https://github.com/shambuchandran/Taskmanager/blob/main/crash.jpg)
+![Events Screenshot](https://github.com/shambuchandran/Taskmanager/blob/main/events.jpg)
+[Watch the demo](https://github.com/shambuchandran/Taskmanager/blob/main/Task%20manager%20rec.mp4)
+
 
 ## Features
 
@@ -47,7 +52,7 @@ Library	Version	Purpose
 1. Layered Architecture
 
 UI Layer (Composable) → ViewModel → Repository → Data Sources (Room, Firebase)
-Why: Separation of concerns, testability, and maintainability
+Why: Separation of concerns, testability and maintainability
 
 2. Reactive Data Flow
    
@@ -60,10 +65,9 @@ Benefit: Automatic UI updates on data changes
 Room database as single source of truth
 Manual sync button for mock server updates
 suspend fun fetchRemoteTasks() {
-    // Clear local data before mock sync
-    taskDao.clearAllTasks()
     remoteTasks.forEach { taskDao.insertTask(it.toEntity()) }
 }
+
 5. Error Handling Strategy
    
 Centralized error reporting via Crashlytics
@@ -94,7 +98,7 @@ Simulated Network Calls
 
 Mock API service with configurable delay:
 
-delay(Random.nextLong(500, 1500)) // Simulate network latency
+delay(Random.nextLong(500, 1500)) // Simulate network latency // for UI testing 
 
 Debug Tools
 
