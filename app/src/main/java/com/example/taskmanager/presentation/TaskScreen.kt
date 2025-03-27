@@ -2,13 +2,16 @@ package com.example.taskmanager.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -20,20 +23,24 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.taskmanager.data.Task
-import com.google.firebase.BuildConfig
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,9 +49,21 @@ fun TaskScreen(viewModel: TaskViewModel = hiltViewModel() ) {
     var showDialog by remember { mutableStateOf(false) }
     var newTaskTitle by remember { mutableStateOf("") }
     var newTaskDesc by remember { mutableStateOf("") }
+    var editingTask by remember { mutableStateOf<Task?>(null) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(viewModel.uiEvent) {
+        viewModel.uiEvent.collect { message ->
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(message)
+            }
+        }
+    }
 
     Scaffold (
         topBar = { TopAppBar(title = { Text("Task Manager") }) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = { showDialog = true },
@@ -54,16 +73,7 @@ fun TaskScreen(viewModel: TaskViewModel = hiltViewModel() ) {
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
-            LazyColumn {
-                items(tasks) { task ->
-                    TaskItem(
-                        task = task,
-                        onToggle = { viewModel.toggleTaskCompletion(task) },
-                        onDelete = { viewModel.deleteTask(task) }
-                    )
-                }
-            }
-
+            DebugTools(viewModel)
             Button(
                 onClick = { viewModel.syncWithRemote() },
                 modifier = Modifier.fillMaxWidth().padding(16.dp)
@@ -71,14 +81,50 @@ fun TaskScreen(viewModel: TaskViewModel = hiltViewModel() ) {
                 Text("Sync with Server")
             }
 
-            if (BuildConfig.DEBUG) {
-                DebugTools(viewModel)
+            if (showDialog || editingTask != null) {
+                var editTitle by remember { mutableStateOf(editingTask?.title ?: "") }
+                var editDesc by remember { mutableStateOf(editingTask?.description ?: "") }
+                AddOrEditTaskDialog(
+                    title = editTitle,
+                    description = editDesc,
+                    onTitleChange = { editTitle = it },
+                    onDescChange = { editDesc = it },
+                    onDismiss = {
+                        showDialog = false
+                        editingTask = null
+                    },
+                    onConfirm = {
+                        if (editingTask != null) {
+                            viewModel.editTask(editingTask!!, editTitle, editDesc)
+                            editingTask = null
+                        } else {
+                            viewModel.addTask(editTitle, editDesc)
+                        }
+                        showDialog = false
+                    }
+                )
             }
+            LazyColumn {
+                items(tasks) { task ->
+                    TaskItem(
+                        task = task,
+                        onToggle = { viewModel.toggleTaskCompletion(task) },
+                        onDelete = { viewModel.deleteTask(task) },
+                        onEdit = {
+                            newTaskTitle = task.title
+                            newTaskDesc = task.description
+                            editingTask = task
+                        }
+                    )
+                }
+            }
+
+            //DebugTools(viewModel)
         }
     }
 
     if (showDialog) {
-        AddTaskDialog(
+        AddOrEditTaskDialog(
             title = newTaskTitle,
             description = newTaskDesc,
             onTitleChange = { newTaskTitle = it },
@@ -95,7 +141,7 @@ fun TaskScreen(viewModel: TaskViewModel = hiltViewModel() ) {
 }
 
 @Composable
-fun TaskItem(task: Task, onToggle: () -> Unit, onDelete: () -> Unit) {
+fun TaskItem(task: Task, onToggle: () -> Unit, onDelete: () -> Unit, onEdit: () -> Unit) {
     Card(modifier = Modifier.padding(8.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -111,6 +157,9 @@ fun TaskItem(task: Task, onToggle: () -> Unit, onDelete: () -> Unit) {
             }
             IconButton(onClick = onDelete) {
                 Icon(Icons.Default.Delete, "Delete")
+            }
+            IconButton(onClick = onEdit) {
+                Icon(Icons.Default.Edit, "Edit")
             }
         }
     }
@@ -130,7 +179,7 @@ fun DebugTools(viewModel: TaskViewModel) {
 }
 
 @Composable
-fun AddTaskDialog(
+fun AddOrEditTaskDialog(
     title: String,
     description: String,
     onTitleChange: (String) -> Unit,
@@ -140,7 +189,7 @@ fun AddTaskDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add New Task") },
+        title = { Text("Add/Edit New Task") },
         text = {
             Column {
                 OutlinedTextField(
@@ -157,7 +206,7 @@ fun AddTaskDialog(
         },
         confirmButton = {
             Button(onClick = onConfirm) {
-                Text("Add Task")
+                Text("Add/Edit Task")
             }
         },
         dismissButton = {
