@@ -93,21 +93,24 @@ State hoisting for testable components
 Testing Features
 Simulated Network Calls
 Mock API service with configurable delay:
+
 delay(Random.nextLong(500, 1500)) // Simulate network latency // for UI testing 
-Debug Tools
-Forced crash testing
+
+Debug Tools Forced crash testing
+
 fun triggerTestCrash() {
     throw RuntimeException("Test crash")
 }
 
 Database constraint violation test
+
 suspend fun triggerDatabaseCrash() {
     taskDao.insertTask(entity)
     taskDao.insertTask(entity) // Force duplicate ID
 }
 
-Firebase Integration Details
-Tracked Events
+Firebase Integration Details and Tracked Events
+
 Event Name	Parameters
 task_added	task_id, title
 task_edited	task_id, title
