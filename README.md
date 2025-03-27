@@ -6,6 +6,8 @@ and real-time synchronization capabilities.
 ![App Screenshot](https://github.com/shambuchandran/Taskmanager/blob/main/appscreen1.jpg)
 ![App Screenshot](https://github.com/shambuchandran/Taskmanager/blob/main/appscreen2.jpg)
 ![Crash Screenshot](https://github.com/shambuchandran/Taskmanager/blob/main/crash.jpg)
+![Crash Screenshot](https://github.com/shambuchandran/Taskmanager/blob/main/crashtrigger.jpg)
+![Crash Screenshot](https://github.com/shambuchandran/Taskmanager/blob/main/crashdetails.jpg)
 ![Events Screenshot](https://github.com/shambuchandran/Taskmanager/blob/main/events.jpg)
 [Watch the demo](https://github.com/shambuchandran/Taskmanager/blob/main/Task%20manager%20rec.mp4)
 
